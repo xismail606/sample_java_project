@@ -1,4 +1,4 @@
-C:\---\-----g-\-------\606 chat\
+606 chatapp
 ├── bin/
 │   ├── ChatClient.class
 │   ├── ChatClientGUI.class
@@ -53,4 +53,5 @@ java -cp bin ChatServerGUI
 ---------------
 netstat -an | findstr 5000
 ---------------
+
 java -cp bin LoginFrame
