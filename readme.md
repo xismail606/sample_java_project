@@ -7,17 +7,17 @@
   />
 </div>
 
-<hr />
+---
 
 <!-- ===================== TITLE ===================== -->
 <h1 align="center"> 💬 606 ChatApp – Java Client-Server Chat Application </h1>
 
 <p align="center">
-A desktop-based <strong>real-time chat application</strong> built using <strong>Java</strong> and <strong>Swing</strong>,<br />
+A desktop-based <strong>real-time chat application</strong> built using <strong>Java</strong> and <strong>Swing</strong>,<br>
 based on a robust <strong>Client–Server Architecture</strong>.
 </p>
 
-<hr />
+---
 
 <!-- ===================== OVERVIEW ===================== -->
 <h2 align="center"> 📌 Overview </h2>
@@ -39,13 +39,13 @@ key_concepts:
   - Object-Oriented Design
 </strong></pre>
 
-<hr />
+---
 
-<!-- ===================== SYSTEM ARCHITECTURE ===================== -->
+<!-- ===================== ARCHITECTURE ===================== -->
 <h2 align="center"> 🏗️ System Architecture </h2>
 
 <p align="center">
-The system follows a centralized client–server communication model.
+The system consists of two main components communicating over TCP.
 </p>
 
 <pre><strong>
@@ -55,11 +55,11 @@ Client C ──┘
 </strong></pre>
 
 <ul>
-  <li><strong>Server:</strong> Accepts connections, manages clients, and broadcasts messages</li>
-  <li><strong>Client:</strong> Sends messages and receives real-time updates</li>
+  <li><strong>Server:</strong> Manages connections, receives messages, and broadcasts them</li>
+  <li><strong>Client:</strong> Sends user messages and receives updates from the server</li>
 </ul>
 
-<hr />
+---
 
 <!-- ===================== CORE COMPONENTS ===================== -->
 <h2 align="center"> 🧩 Core Components </h2>
@@ -69,12 +69,12 @@ Client C ──┘
 <pre><strong>
 ChatServer.java
   - Uses ServerSocket (Port: 5000 / 5001)
-  - Handles multiple clients concurrently
+  - Accepts multiple client connections
   - Spawns a ClientHandler thread per client
-  - Broadcasts messages to all connected clients
+  - Broadcasts messages to all connected users
 
 ChatServerGUI.java
-  - Administrative GUI
+  - Administrative interface
   - Displays server logs with timestamps
   - Shows connected clients list
   - Start / Stop server controls
@@ -84,28 +84,28 @@ ChatServerGUI.java
 
 <pre><strong>
 LoginFrame.java
-  - User login screen
+  - User authentication screen
   - Username validation
-  - Animated logo & custom UI elements
+  - Animated logo & custom UI components
 
 ChatClient.java
   - Manages socket connection
-  - Dedicated listener thread for incoming messages
-  - Handles protocol commands (JOIN, EXIT)
+  - Runs a listener thread for incoming messages
+  - Handles protocol messages (JOIN, EXIT)
 
 ChatClientGUI.java
   - Main chat interface
-  - Chat bubbles with left/right alignment
-  - Auto-scroll and keyboard input support
+  - Chat bubbles (left/right alignment)
+  - Auto-scroll & keyboard input support
 </strong></pre>
 
-<hr />
+---
 
-<!-- ===================== COMMUNICATION PROTOCOL ===================== -->
+<!-- ===================== COMMUNICATION ===================== -->
 <h2 align="center"> 🔄 Communication Protocol </h2>
 
 <p align="center">
-The application uses a simple text-based protocol:
+The application uses a simple text-based protocol.
 </p>
 
 <pre><strong>
@@ -119,7 +119,7 @@ SERVER_DISCONNECTED
 [Username] has left the chat.
 </strong></pre>
 
-<hr />
+---
 
 <!-- ===================== FEATURES ===================== -->
 <h2 align="center"> ✨ Features </h2>
@@ -127,17 +127,17 @@ SERVER_DISCONNECTED
 <ul>
   <li>💬 Real-time multi-user chat</li>
   <li>🧵 Multi-threaded server (one thread per client)</li>
-  <li>🎨 Modern dark-themed Swing UI with gradients</li>
-  <li>🟣 User messages aligned right with distinct color</li>
+  <li>🎨 Modern dark-themed GUI with gradients</li>
+  <li>🟣 User messages aligned right (distinct color)</li>
   <li>🟢 Other users’ messages aligned left</li>
   <li>📌 System messages centered & italicized</li>
   <li>⏱️ Timestamped messages</li>
   <li>⌨️ Send messages using Enter key</li>
-  <li>🚫 Prevents sending empty messages</li>
+  <li>🚫 Send button disabled for empty input</li>
   <li>📜 Auto-scroll on new messages</li>
 </ul>
 
-<hr />
+---
 
 <!-- ===================== PROJECT STRUCTURE ===================== -->
 <h2 align="center"> 📂 Project Structure </h2>
@@ -166,7 +166,7 @@ SERVER_DISCONNECTED
 └── readme.txt
 </strong></pre>
 
-<hr />
+---
 
 <!-- ===================== BUILD ===================== -->
 <h2 align="center"> 🛠️ Build & Compile </h2>
@@ -184,7 +184,7 @@ dir src
 dir bin
 </strong></pre>
 
-<hr />
+---
 
 <!-- ===================== RUN ===================== -->
 <h2 align="center"> ▶️ How To Run </h2>
@@ -210,22 +210,22 @@ java -cp bin LoginFrame
 </strong></pre>
 
 <p align="center">
-You can also use the provided <code>.jar</code> files or <code>.bat</code> scripts.
+You can also use the provided <code>.jar</code> files or <code>.bat</code> scripts for quick launch.
 </p>
 
-<hr />
+---
 
 <!-- ===================== DESIGN ===================== -->
 <h2 align="center"> 🎯 Design Philosophy </h2>
 
 <ul>
   <li>✔️ Clear separation between logic and UI</li>
-  <li>✔️ Thread-safe client handling</li>
+  <li>✔️ Thread-safe communication</li>
   <li>✔️ Responsive and modern desktop UI</li>
-  <li>✔️ Scalable for multiple concurrent users</li>
+  <li>✔️ Scalable for multiple users</li>
 </ul>
 
-<hr />
+---
 
 <!-- ===================== CONCLUSION ===================== -->
 <h2 align="center"> 🧠 Conclusion </h2>
@@ -240,17 +240,17 @@ It serves as a strong educational example of Java-based
 client–server applications.
 </p>
 
-<hr />
+---
 
 <!-- ===================== AUTHOR ===================== -->
 <h2 align="center"> 👤 Author </h2>
 
 <p align="center">
-<strong>x606</strong><br />
+<strong>x606</strong><br>
 Java Developer & Security Enthusiast
 </p>
 
-<hr />
+---
 
 <!-- ===================== FOOTER ===================== -->
 <div align="center">
