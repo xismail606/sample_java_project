@@ -247,7 +247,6 @@ client–server applications.
 
 <p align="center">
 <strong>x606</strong><br>
-Java Developer & Security Enthusiast
 </p>
 
 ---
@@ -259,3 +258,4 @@ Java Developer & Security Enthusiast
     width="100%"
   />
 </div>
+
