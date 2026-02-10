@@ -175,8 +175,11 @@ SERVER_DISCONNECTED
 <!-- ===================== PROJECT STRUCTURE ===================== -->
 <h2 align="center"> 📂 Project Structure </h2>
 
-<pre><strong>
+```
 606-chatapp/
+│
+├── bin/
+│   ├── *.class
 │
 ├── manifest/
 │   ├── client.mf
@@ -185,46 +188,21 @@ SERVER_DISCONNECTED
 │   └── start-server.bat
 │
 ├── src/
-│   ├── ChatClient.jar
-│   └── ChatServer.jar
+│   ├── ChatClient.java
+│   ├── ChatClientGUI.java
+│   ├── ChatServer.java
+│   ├── ChatServerGUI.java
+│   ├── LoginFrame.java
 │
-├── ChatClient.java
-├── ChatClientGUI.java
-├── ChatServer.java
-├── ChatServerGUI.java
-├── LoginFrame.java
-│
-├── build-all.bat
-├── README.md
-└── PROJECT-STRUCTURE.md
-</strong></pre>
+├── ChatClient.jar
+└── ChatServer.jar
+└── README.md
+```
 
 ---
 
 <!-- ===================== BUILD ===================== -->
 <h2 align="center"> 🛠️ Build & Compile </h2>
-
-<h3>🔹 Quick Build (Recommended)</h3>
-
-<p align="center">
-Double-click or run:
-</p>
-
-<pre><strong>
-build-all.bat
-</strong></pre>
-
-<p align="center">
-This will automatically:
-</p>
-
-<ul>
-  <li>✅ Compile all Java files</li>
-  <li>✅ Create JAR files in src/ directory</li>
-  <li>✅ Clean up .class files</li>
-</ul>
-
-<h3>🔹 Manual Build</h3>
 
 <p align="center">
 Server:
@@ -524,3 +502,4 @@ Special thanks to the Java and Swing communities for their excellent documentati
     width="100%"
   />
 </div>
+
