@@ -201,84 +201,6 @@ SERVER_DISCONNECTED
 
 ---
 
-<!-- ===================== BUILD ===================== -->
-<h2 align="center"> 🛠️ Build & Compile </h2>
-
-<p align="center">
-Server:
-</p>
-
-<pre><strong>
-javac ChatServer.java ChatServerGUI.java
-jar cvfm src/ChatServer.jar manifest/server.mf ChatServer*.class
-del *.class
-</strong></pre>
-
-<p align="center">
-Client:
-</p>
-
-<pre><strong>
-javac ChatClient.java ChatClientGUI.java LoginFrame.java
-jar cvfm src/ChatClient.jar manifest/client.mf ChatClient*.class LoginFrame*.class
-del *.class
-</strong></pre>
-
----
-
-<!-- ===================== RUN ===================== -->
-<h2 align="center"> ▶️ How To Run </h2>
-
-<h3>🔹 Start Server</h3>
-
-<p align="center">
-<strong>Using BAT file (Easiest):</strong>
-</p>
-
-<pre><strong>
-manifest\start-server.bat
-</strong></pre>
-
-<p align="center">
-<strong>Or manually:</strong>
-</p>
-
-<pre><strong>
-java -jar src/ChatServer.jar
-</strong></pre>
-
-<p align="center">
-<strong>Check listening port:</strong>
-</p>
-
-<pre><strong>
-netstat -an | findstr 5001
-</strong></pre>
-
-<h3>🔹 Start Client</h3>
-
-<p align="center">
-<strong>Using BAT file (Easiest):</strong>
-</p>
-
-<pre><strong>
-manifest\start-client.bat
-</strong></pre>
-
-<p align="center">
-<strong>Or manually:</strong>
-</p>
-
-<pre><strong>
-java -jar src/ChatClient.jar
-</strong></pre>
-
-<p align="center">
-You can run multiple client instances to simulate multiple users.
-</p>
-
----
-
 <!-- ===================== REQUIREMENTS ===================== -->
 <h2 align="center"> ⚙️ Requirements </h2>
 
@@ -502,4 +424,5 @@ Special thanks to the Java and Swing communities for their excellent documentati
     width="100%"
   />
 </div>
+
 
