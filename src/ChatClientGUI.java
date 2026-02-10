@@ -206,7 +206,7 @@ public class ChatClientGUI extends JFrame {
                 setTitle("Chat 606 - " + newName);
                 addSystemMessage("✅ Connected as " + newName);
             } else if (message.startsWith("USERS: ")) {
-                addSystemMessage("👥 Online users: " + message.substring(7)); // ✅ إصلاح الإيموجي
+                addSystemMessage("👥 Online users: " + message.substring(7));
             } else if (message.contains("joined") || message.contains("left")) {
                 addSystemMessage("📢 " + message);
             } else {

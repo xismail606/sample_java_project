@@ -148,7 +148,7 @@ public class ChatServer {
 
         private void broadcast(String message, boolean isSystemMessage) {
             for (ClientHandler client : clients) {
-                // ✅ إصلاح المشكلة: الآن الرسائل تُرسل بشكل صحيح
+
                 if (isSystemMessage) {
                     // System messages go to everyone
                     client.out.println(message);

@@ -18,7 +18,6 @@ public class LoginFrame extends JFrame {
     private boolean isJoinButtonHovered = false;
     private boolean isExitButtonHovered = false;
 
-    // ✅ حدود لطول اسم المستخدم
     private static final int MIN_USERNAME_LENGTH = 2;
     private static final int MAX_USERNAME_LENGTH = 15;
 
@@ -64,7 +63,7 @@ public class LoginFrame extends JFrame {
         gbc.insets = new Insets(10, 40, 5, 40);
         panel.add(usernameField, gbc);
 
-        // ✅ Validation Label
+        // Validation Label
         validationLabel = new JLabel(" ");
         validationLabel.setForeground(new Color(255, 100, 100));
         validationLabel.setFont(new Font("Segoe UI", Font.ITALIC, 11));
@@ -94,7 +93,6 @@ public class LoginFrame extends JFrame {
     private void joinChat() {
         String username = usernameField.getText().trim();
 
-        // ✅ تحقق محسّن من صحة اسم المستخدم
         if (username.isEmpty() || username.equals("Enter username")) {
             showValidationError("Please enter a username");
             return;
@@ -227,7 +225,7 @@ public class LoginFrame extends JFrame {
         field.setOpaque(false);
         field.setBorder(new RoundedBorder(15));
 
-        // ✅ إضافة DocumentListener لمنع إدخال أكثر من MAX_USERNAME_LENGTH
+        // DocumentListener MAX_USERNAME_LENGTH
         field.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {

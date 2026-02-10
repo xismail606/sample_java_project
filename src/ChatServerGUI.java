@@ -56,7 +56,7 @@ public class ChatServerGUI extends JFrame {
         clientListModel = new DefaultListModel<>();
         clientList = new JList<>(clientListModel);
         clientList.setFont(LOG_FONT);
-        clientList.setForeground(new Color(144, 238, 144)); // Light green
+        clientList.setForeground(new Color(144, 238, 144));
         clientList.setBackground(new Color(30, 30, 50));
         clientList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
