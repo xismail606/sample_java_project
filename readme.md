@@ -220,16 +220,15 @@ SERVER_DISCONNECTED
 
 <ol>
   <li>Extract all files to a folder</li>
-  <li>Run <code>build-all.bat</code> to create JAR files</li>
-  <li>Start server using <code>manifest\start-server.bat</code></li>
-  <li>Start client(s) using <code>manifest\start-client.bat</code></li>
+  <li>Double-click ChatServer.jar to start the server</li>
+  <li>Double-click ChatClient.jar to start one or more clients</code></li>
 </ol>
 
 <h3>🔹 Daily Usage</h3>
 
 <ol>
-  <li>Start server first</li>
-  <li>Start client(s)</li>
+  <li>Double-click ChatServer.jar first</li>
+  <li>Double-click ChatClient.jar</li>
   <li>Enter username (2-15 characters, alphanumeric + underscore)</li>
   <li>Start chatting!</li>
 </ol>
@@ -411,6 +410,7 @@ Special thanks to the Java and Swing communities for their excellent documentati
     width="100%"
   />
 </div>
+
 
 
 
