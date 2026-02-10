@@ -317,23 +317,10 @@ SERVER_DISCONNECTED
     <td>Close other apps using port 5001</td>
   </tr>
   <tr>
-    <td>JAR file not found</td>
-    <td>Run build-all.bat first</td>
-  </tr>
-  <tr>
     <td>Username rejected</td>
     <td>Use 2-15 chars, alphanumeric + underscore only</td>
   </tr>
 </table>
-
----
-
-<!-- ===================== SCREENSHOTS ===================== -->
-<h2 align="center"> 📸 Screenshots </h2>
-
-<p align="center">
-<em>Screenshots of the application in action would go here</em>
-</p>
 
 ---
 
@@ -424,5 +411,6 @@ Special thanks to the Java and Swing communities for their excellent documentati
     width="100%"
   />
 </div>
+
 
 
