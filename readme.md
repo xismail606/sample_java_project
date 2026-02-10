@@ -37,6 +37,7 @@ key_concepts:
   - Network Programming
   - Event-Driven GUI
   - Object-Oriented Design
+  - Thread Safety
 </strong></pre>
 
 ---
@@ -68,16 +69,19 @@ Client C ──┘
 
 <pre><strong>
 ChatServer.java
-  - Uses ServerSocket (Port: 5000 / 5001)
+  - Uses ServerSocket (Port: 5001)
   - Accepts multiple client connections
   - Spawns a ClientHandler thread per client
   - Broadcasts messages to all connected users
+  - Thread-safe with ConcurrentHashMap
+  - Automatic duplicate username prevention
 
 ChatServerGUI.java
   - Administrative interface
   - Displays server logs with timestamps
-  - Shows connected clients list
+  - Shows connected clients list with status indicators
   - Start / Stop server controls
+  - Real-time user count display
 </strong></pre>
 
 <h3>🔹 Client Side</h3>
@@ -85,18 +89,23 @@ ChatServerGUI.java
 <pre><strong>
 LoginFrame.java
   - User authentication screen
-  - Username validation
+  - Username validation (2-15 characters)
   - Animated logo & custom UI components
+  - Real-time input validation feedback
+  - Connection testing before login
 
 ChatClient.java
   - Manages socket connection
   - Runs a listener thread for incoming messages
-  - Handles protocol messages (JOIN, EXIT)
+  - Handles protocol messages (JOIN, EXIT, NAME_CHANGED)
+  - Automatic reconnection handling
 
 ChatClientGUI.java
   - Main chat interface
   - Chat bubbles (left/right alignment)
   - Auto-scroll & keyboard input support
+  - Emoji support in system messages
+  - Timestamp display for all messages
 </strong></pre>
 
 ---
@@ -111,6 +120,7 @@ The application uses a simple text-based protocol.
 <pre><strong>
 SUBMIT_NAME
 [Username]
+NAME_CHANGED:[NewUsername]
 [Username]: [Message]
 EXIT
 SERVER_STOPPED
@@ -127,14 +137,37 @@ SERVER_DISCONNECTED
 <ul>
   <li>💬 Real-time multi-user chat</li>
   <li>🧵 Multi-threaded server (one thread per client)</li>
+  <li>🚫 Automatic duplicate username prevention</li>
+  <li>📏 Username validation (2-15 characters, alphanumeric + underscore)</li>
+  <li>🔒 Thread-safe with ConcurrentHashMap</li>
   <li>🎨 Modern dark-themed GUI with gradients</li>
-  <li>🟣 User messages aligned right (distinct color)</li>
-  <li>🟢 Other users’ messages aligned left</li>
-  <li>📌 System messages centered & italicized</li>
-  <li>⏱️ Timestamped messages</li>
+  <li>🟣 User messages aligned right (distinct purple color)</li>
+  <li>🟢 Other users' messages aligned left (green color)</li>
+  <li>📌 System messages with emoji indicators (🔄✅❌📢⚠️👥)</li>
+  <li>⏱️ Timestamped messages (HH:mm:ss dd/MM/yyyy)</li>
   <li>⌨️ Send messages using Enter key</li>
   <li>🚫 Send button disabled for empty input</li>
   <li>📜 Auto-scroll on new messages</li>
+  <li>🖱️ Custom gradient buttons with hover effects</li>
+  <li>🎯 Graceful connection handling and error recovery</li>
+</ul>
+
+---
+
+<!-- ===================== BUG FIXES ===================== -->
+<h2 align="center"> 🐛 Bug Fixes & Improvements </h2>
+
+<ul>
+  <li>✅ Fixed broadcast issue - users now see their own messages</li>
+  <li>✅ Fixed corrupted emoji rendering (👥 instead of ðŸ'¥)</li>
+  <li>✅ Fixed LogArea display issues in server GUI</li>
+  <li>✅ Added automatic duplicate username handling with counter (User → User1 → User2)</li>
+  <li>✅ Implemented username length validation (2-15 chars)</li>
+  <li>✅ Improved thread safety with ConcurrentHashMap</li>
+  <li>✅ Enhanced system messages with proper emoji indicators</li>
+  <li>✅ Better color scheme for system messages (gold instead of red)</li>
+  <li>✅ Fixed client not seeing own messages in chat</li>
+  <li>✅ Improved connection timeout handling</li>
 </ul>
 
 ---
@@ -145,9 +178,6 @@ SERVER_DISCONNECTED
 <pre><strong>
 606-chatapp/
 │
-├── bin/
-│   ├── *.class
-│
 ├── manifest/
 │   ├── client.mf
 │   ├── server.mf
@@ -155,15 +185,18 @@ SERVER_DISCONNECTED
 │   └── start-server.bat
 │
 ├── src/
-│   ├── ChatClient.java
-│   ├── ChatClientGUI.java
-│   ├── ChatServer.java
-│   ├── ChatServerGUI.java
-│   └── LoginFrame.java
+│   ├── ChatClient.jar
+│   └── ChatServer.jar
 │
-├── ChatClient.jar
-├── ChatServer.jar
-└── readme.txt
+├── ChatClient.java
+├── ChatClientGUI.java
+├── ChatServer.java
+├── ChatServerGUI.java
+├── LoginFrame.java
+│
+├── build-all.bat
+├── README.md
+└── PROJECT-STRUCTURE.md
 </strong></pre>
 
 ---
@@ -171,17 +204,46 @@ SERVER_DISCONNECTED
 <!-- ===================== BUILD ===================== -->
 <h2 align="center"> 🛠️ Build & Compile </h2>
 
-<pre><strong>
-javac -d bin src/*.java
-</strong></pre>
+<h3>🔹 Quick Build (Recommended)</h3>
 
 <p align="center">
-Verify directories:
+Double-click or run:
 </p>
 
 <pre><strong>
-dir src
-dir bin
+build-all.bat
+</strong></pre>
+
+<p align="center">
+This will automatically:
+</p>
+
+<ul>
+  <li>✅ Compile all Java files</li>
+  <li>✅ Create JAR files in src/ directory</li>
+  <li>✅ Clean up .class files</li>
+</ul>
+
+<h3>🔹 Manual Build</h3>
+
+<p align="center">
+Server:
+</p>
+
+<pre><strong>
+javac ChatServer.java ChatServerGUI.java
+jar cvfm src/ChatServer.jar manifest/server.mf ChatServer*.class
+del *.class
+</strong></pre>
+
+<p align="center">
+Client:
+</p>
+
+<pre><strong>
+javac ChatClient.java ChatClientGUI.java LoginFrame.java
+jar cvfm src/ChatClient.jar manifest/client.mf ChatClient*.class LoginFrame*.class
+del *.class
 </strong></pre>
 
 ---
@@ -191,27 +253,96 @@ dir bin
 
 <h3>🔹 Start Server</h3>
 
-<pre><strong>
-java -cp bin ChatServerGUI
-</strong></pre>
-
 <p align="center">
-Check listening port:
+<strong>Using BAT file (Easiest):</strong>
 </p>
 
 <pre><strong>
-netstat -an | findstr 5000
+manifest\start-server.bat
+</strong></pre>
+
+<p align="center">
+<strong>Or manually:</strong>
+</p>
+
+<pre><strong>
+java -jar src/ChatServer.jar
+</strong></pre>
+
+<p align="center">
+<strong>Check listening port:</strong>
+</p>
+
+<pre><strong>
+netstat -an | findstr 5001
 </strong></pre>
 
 <h3>🔹 Start Client</h3>
 
+<p align="center">
+<strong>Using BAT file (Easiest):</strong>
+</p>
+
 <pre><strong>
-java -cp bin LoginFrame
+manifest\start-client.bat
 </strong></pre>
 
 <p align="center">
-You can also use the provided <code>.jar</code> files or <code>.bat</code> scripts for quick launch.
+<strong>Or manually:</strong>
 </p>
+
+<pre><strong>
+java -jar src/ChatClient.jar
+</strong></pre>
+
+<p align="center">
+You can run multiple client instances to simulate multiple users.
+</p>
+
+---
+
+<!-- ===================== REQUIREMENTS ===================== -->
+<h2 align="center"> ⚙️ Requirements </h2>
+
+<ul>
+  <li>☕ <strong>Java JDK 8</strong> or higher</li>
+  <li>🖥️ <strong>Windows, macOS, or Linux</strong></li>
+  <li>📡 <strong>Network connection</strong> (localhost or LAN)</li>
+  <li>🔌 <strong>Port 5001</strong> available (not blocked by firewall)</li>
+</ul>
+
+---
+
+<!-- ===================== USAGE ===================== -->
+<h2 align="center"> 📖 Usage Guide </h2>
+
+<h3>🔹 First Time Setup</h3>
+
+<ol>
+  <li>Extract all files to a folder</li>
+  <li>Run <code>build-all.bat</code> to create JAR files</li>
+  <li>Start server using <code>manifest\start-server.bat</code></li>
+  <li>Start client(s) using <code>manifest\start-client.bat</code></li>
+</ol>
+
+<h3>🔹 Daily Usage</h3>
+
+<ol>
+  <li>Start server first</li>
+  <li>Start client(s)</li>
+  <li>Enter username (2-15 characters, alphanumeric + underscore)</li>
+  <li>Start chatting!</li>
+</ol>
+
+<h3>🔹 Username Rules</h3>
+
+<ul>
+  <li>✅ Minimum 2 characters</li>
+  <li>✅ Maximum 15 characters</li>
+  <li>✅ Letters, numbers, and underscore only</li>
+  <li>❌ No spaces or special characters</li>
+  <li>🔄 Duplicate names get automatic counter (Ahmed → Ahmed1)</li>
+</ul>
 
 ---
 
@@ -220,9 +351,106 @@ You can also use the provided <code>.jar</code> files or <code>.bat</code> scrip
 
 <ul>
   <li>✔️ Clear separation between logic and UI</li>
-  <li>✔️ Thread-safe communication</li>
+  <li>✔️ Thread-safe communication with ConcurrentHashMap</li>
   <li>✔️ Responsive and modern desktop UI</li>
   <li>✔️ Scalable for multiple users</li>
+  <li>✔️ Graceful error handling and recovery</li>
+  <li>✔️ Clean code architecture</li>
+  <li>✔️ Professional project structure</li>
+</ul>
+
+---
+
+<!-- ===================== TECHNICAL DETAILS ===================== -->
+<h2 align="center"> 🔧 Technical Details </h2>
+
+<h3>🔹 Server Architecture</h3>
+
+<ul>
+  <li><strong>Concurrency:</strong> ConcurrentHashMap for thread-safe client management</li>
+  <li><strong>Threading:</strong> One dedicated thread per client connection</li>
+  <li><strong>Port:</strong> 5001 (configurable in code)</li>
+  <li><strong>Protocol:</strong> Text-based message protocol over TCP</li>
+</ul>
+
+<h3>🔹 Client Architecture</h3>
+
+<ul>
+  <li><strong>Connection:</strong> Socket with 3-second timeout</li>
+  <li><strong>Threading:</strong> Separate listener thread for incoming messages</li>
+  <li><strong>UI:</strong> Event-driven Swing components</li>
+  <li><strong>State Management:</strong> Real-time UI updates via SwingUtilities</li>
+</ul>
+
+<h3>🔹 Message Flow</h3>
+
+<pre><strong>
+1. Client connects → Server accepts
+2. Server requests username → Client sends
+3. Server validates & broadcasts join
+4. Messages flow: Client → Server → All Clients
+5. Client disconnects → Server broadcasts leave
+</strong></pre>
+
+---
+
+<!-- ===================== TROUBLESHOOTING ===================== -->
+<h2 align="center"> 🔍 Troubleshooting </h2>
+
+<h3>🔹 Common Issues</h3>
+
+<table align="center">
+  <tr>
+    <th>Problem</th>
+    <th>Solution</th>
+  </tr>
+  <tr>
+    <td>Java not recognized</td>
+    <td>Install Java JDK and add to PATH</td>
+  </tr>
+  <tr>
+    <td>Cannot connect to server</td>
+    <td>Ensure server is running first</td>
+  </tr>
+  <tr>
+    <td>Port already in use</td>
+    <td>Close other apps using port 5001</td>
+  </tr>
+  <tr>
+    <td>JAR file not found</td>
+    <td>Run build-all.bat first</td>
+  </tr>
+  <tr>
+    <td>Username rejected</td>
+    <td>Use 2-15 chars, alphanumeric + underscore only</td>
+  </tr>
+</table>
+
+---
+
+<!-- ===================== SCREENSHOTS ===================== -->
+<h2 align="center"> 📸 Screenshots </h2>
+
+<p align="center">
+<em>Screenshots of the application in action would go here</em>
+</p>
+
+---
+
+<!-- ===================== FUTURE ENHANCEMENTS ===================== -->
+<h2 align="center"> 🚀 Future Enhancements </h2>
+
+<ul>
+  <li>🔐 Add user authentication and password protection</li>
+  <li>💾 Message history persistence</li>
+  <li>📁 File sharing capabilities</li>
+  <li>🎨 Customizable themes and color schemes</li>
+  <li>🔔 Sound notifications for new messages</li>
+  <li>👥 Private messaging between users</li>
+  <li>🌐 Support for remote server connections</li>
+  <li>📊 Server statistics and analytics</li>
+  <li>🔒 Message encryption</li>
+  <li>👤 User profiles with avatars</li>
 </ul>
 
 ---
@@ -237,7 +465,28 @@ can be combined to build a robust real-time communication system.
 
 <p align="center">
 It serves as a strong educational example of Java-based
-client–server applications.
+client–server applications with modern UI design and professional code structure.
+</p>
+
+<p align="center">
+The application showcases best practices in:
+</p>
+
+<ul>
+  <li>✅ Socket programming</li>
+  <li>✅ Multi-threaded application design</li>
+  <li>✅ Thread-safe concurrent data structures</li>
+  <li>✅ Event-driven GUI development</li>
+  <li>✅ Clean code architecture</li>
+</ul>
+
+---
+
+<!-- ===================== LICENSE ===================== -->
+<h2 align="center"> 📄 License </h2>
+
+<p align="center">
+This project is open source and available for educational purposes.
 </p>
 
 ---
@@ -249,6 +498,23 @@ client–server applications.
 <strong>x606</strong><br>
 </p>
 
+<p align="center">
+<em>Developed with ☕ Java and 💜 Passion</em>
+</p>
+
+---
+
+<!-- ===================== ACKNOWLEDGMENTS ===================== -->
+<h2 align="center"> 🙏 Acknowledgments </h2>
+
+<p align="center">
+Thanks to all contributors and users of this project.
+</p>
+
+<p align="center">
+Special thanks to the Java and Swing communities for their excellent documentation.
+</p>
+
 ---
 
 <!-- ===================== FOOTER ===================== -->
@@ -258,4 +524,3 @@ client–server applications.
     width="100%"
   />
 </div>
-
