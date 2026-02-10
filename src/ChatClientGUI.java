@@ -153,13 +153,12 @@ public class ChatClientGUI extends JFrame {
     }
 
     private void connectToServer(String host, int port) {
-        SwingUtilities.invokeLater(() -> addSystemMessage("Connecting to server..."));
+        SwingUtilities.invokeLater(() -> addSystemMessage("🔄 Connecting to server..."));
         try {
             this.client = new ChatClient(host, port, this::onMessageReceived);
             client.startClient();
             client.sendName(name);
             LOGGER.info("Connected to server");
-            addSystemMessage(" Connected as " + name);
         } catch (Exception e) {
             LOGGER.severe("Failed to connect: " + e.getMessage());
             JOptionPane.showMessageDialog(this, "Failed to connect: " + e.getMessage(), "Error",
@@ -180,7 +179,7 @@ public class ChatClientGUI extends JFrame {
     }
 
     private void exitApplication() {
-        LOGGER.info("User  " + name + " is leaving");
+        LOGGER.info("User " + name + " is leaving");
         if (client != null) {
             try {
                 client.sendExit();
@@ -197,13 +196,19 @@ public class ChatClientGUI extends JFrame {
         LOGGER.info("Received: " + message);
         SwingUtilities.invokeLater(() -> {
             if (message.equals("SERVER_DISCONNECTED") || message.equals("SERVER_STOPPED")) {
-                addSystemMessage(" Disconnected from server.");
+                addSystemMessage("❌ Disconnected from server.");
                 messageField.setEnabled(false);
                 sendButton.setEnabled(false);
+            } else if (message.startsWith("NAME_CHANGED:")) {
+                String newName = message.substring(13);
+                addSystemMessage("⚠️ Your name was changed to: " + newName + " (original name was taken)");
+                this.name = newName;
+                setTitle("Chat 606 - " + newName);
+                addSystemMessage("✅ Connected as " + newName);
             } else if (message.startsWith("USERS: ")) {
-                addSystemMessage("👥 Online users: " + message.substring(6));
+                addSystemMessage("👥 Online users: " + message.substring(7)); // ✅ إصلاح الإيموجي
             } else if (message.contains("joined") || message.contains("left")) {
-                addSystemMessage(" Received: " + message);
+                addSystemMessage("📢 " + message);
             } else {
                 String[] parts = message.split(" - ", 2);
                 String timestamp = parts.length == 2 ? parts[0]
@@ -271,7 +276,7 @@ public class ChatClientGUI extends JFrame {
         systemPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         systemPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
-        JLabel systemLabel = new JLabel("<html><i style='color: red;'>" + message + "</i></html>");
+        JLabel systemLabel = new JLabel("<html><i style='color: #FFD700;'>" + message + "</i></html>");
         systemLabel.setFont(SYSTEM_FONT);
 
         systemPanel.add(systemLabel);

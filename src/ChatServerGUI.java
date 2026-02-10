@@ -16,8 +16,8 @@ public class ChatServerGUI extends JFrame {
 
     public ChatServerGUI() {
         super("606 ChatApp - Server");
-        setSize(600, 400);
-        setMinimumSize(new Dimension(400, 300));
+        setSize(700, 450);
+        setMinimumSize(new Dimension(500, 350));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -35,55 +35,46 @@ public class ChatServerGUI extends JFrame {
             }
         };
         mainPanel.setLayout(new BorderLayout(10, 10));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setContentPane(mainPanel);
 
-        logArea = new JTextArea() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                GradientPaint gp = new GradientPaint(0, 0, new Color(20, 20, 60),
-                        0, getHeight(), new Color(60, 20, 80));
-                g2d.setPaint(gp);
-                g2d.fillRect(0, 0, getWidth(), getHeight());
-                g2d.setColor(getForeground());
-                g2d.setFont(getFont());
-                g2d.drawString(getText(), 5, getFontMetrics(getFont()).getHeight());
-                g2d.dispose();
-                super.paintComponent(g);
-            }
-        };
+        // ✅ إصلاح LogArea - إزالة paintComponent المخصص والاعتماد على JTextArea العادي
+        logArea = new JTextArea();
         logArea.setEditable(false);
         logArea.setFont(LOG_FONT);
-        logArea.setForeground(new Color(255, 0, 0));
-        logArea.setOpaque(false);
-        logArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        logArea.setForeground(new Color(255, 215, 0)); // Gold color
+        logArea.setBackground(new Color(30, 30, 50));
+        logArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        logArea.setLineWrap(true);
+        logArea.setWrapStyleWord(true);
 
         JScrollPane scrollPane = new JScrollPane(logArea);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 150), 2));
+        scrollPane.getViewport().setBackground(new Color(30, 30, 50));
 
         clientListModel = new DefaultListModel<>();
-        clientList = new JList<>(clientListModel) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g.create();
-                GradientPaint gp = new GradientPaint(0, 0, new Color(20, 20, 60),
-                        0, getHeight(), new Color(60, 20, 80));
-                g2d.setPaint(gp);
-                g2d.fillRect(0, 0, getWidth(), getHeight());
-                g2d.dispose();
-                super.paintComponent(g);
-            }
-        };
+        clientList = new JList<>(clientListModel);
         clientList.setFont(LOG_FONT);
-        clientList.setForeground(new Color(255, 0, 0));
-        clientList.setOpaque(false);
+        clientList.setForeground(new Color(144, 238, 144)); // Light green
+        clientList.setBackground(new Color(30, 30, 50));
+        clientList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
         JScrollPane clientScrollPane = new JScrollPane(clientList);
-        clientScrollPane.setPreferredSize(new Dimension(150, 0));
-        clientScrollPane.getViewport().setOpaque(false);
-        clientScrollPane.setBorder(BorderFactory.createEmptyBorder());
+        clientScrollPane.setPreferredSize(new Dimension(180, 0));
+        clientScrollPane.getViewport().setBackground(new Color(30, 30, 50));
+        clientScrollPane.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 150), 2));
+
+        // Title for client list
+        JLabel clientListTitle = new JLabel("👥 Connected Users");
+        clientListTitle.setForeground(new Color(255, 215, 0));
+        clientListTitle.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
+        clientListTitle.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JPanel clientPanel = new JPanel(new BorderLayout(5, 5));
+        clientPanel.setOpaque(false);
+        clientPanel.add(clientListTitle, BorderLayout.NORTH);
+        clientPanel.add(clientScrollPane, BorderLayout.CENTER);
 
         stopButton = createGradientButton("Stop Server");
         stopButton.addActionListener(e -> stopServer());
@@ -92,18 +83,18 @@ public class ChatServerGUI extends JFrame {
         startButton.addActionListener(e -> startServer());
         startButton.setEnabled(false);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonPanel.setOpaque(false);
         buttonPanel.add(startButton);
         buttonPanel.add(stopButton);
 
         mainPanel.add(scrollPane, BorderLayout.CENTER);
-        mainPanel.add(clientScrollPane, BorderLayout.EAST);
+        mainPanel.add(clientPanel, BorderLayout.EAST);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         server = new ChatServer(this::appendLog, this::updateClientList);
         server.startServer();
-        appendLog("Chat server started on port 5001");
+        appendLog("✅ Chat server started on port 5001");
     }
 
     private JButton createGradientButton(String text) {
@@ -111,6 +102,7 @@ public class ChatServerGUI extends JFrame {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2d = (Graphics2D) g.create();
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 GradientPaint gp = new GradientPaint(0, 0, new Color(167, 29, 251),
                         0, getHeight(), new Color(100, 149, 237));
                 g2d.setPaint(gp);
@@ -130,6 +122,7 @@ public class ChatServerGUI extends JFrame {
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setOpaque(false);
+        button.setPreferredSize(new Dimension(130, 35));
         return button;
     }
 
@@ -144,14 +137,18 @@ public class ChatServerGUI extends JFrame {
     public void updateClientList(Set<String> clients) {
         SwingUtilities.invokeLater(() -> {
             clientListModel.clear();
-            clients.forEach(clientListModel::addElement);
+            if (clients.isEmpty()) {
+                clientListModel.addElement("(No users connected)");
+            } else {
+                clients.forEach(client -> clientListModel.addElement("🟢 " + client));
+            }
         });
     }
 
     private void startServer() {
         server = new ChatServer(this::appendLog, this::updateClientList);
         server.startServer();
-        appendLog("Chat server started on port 5001");
+        appendLog("✅ Chat server started on port 5001");
         startButton.setEnabled(false);
         stopButton.setEnabled(true);
     }
@@ -159,15 +156,20 @@ public class ChatServerGUI extends JFrame {
     private void stopServer() {
         try {
             server.stopServer();
-            appendLog("Server stopped");
+            appendLog("❌ Server stopped");
             stopButton.setEnabled(false);
             startButton.setEnabled(true);
         } catch (IOException e) {
-            appendLog("Error stopping server: " + e.getMessage());
+            appendLog("⚠️ Error stopping server: " + e.getMessage());
         }
     }
 
     public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         SwingUtilities.invokeLater(() -> new ChatServerGUI().setVisible(true));
     }
 }

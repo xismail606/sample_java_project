@@ -10,6 +10,7 @@ public class LoginFrame extends JFrame {
     private JButton joinButton;
     private JButton exitButton;
     private JLabel logoLabel;
+    private JLabel validationLabel;
 
     private float scale = 1.0f;
     private boolean growing = true;
@@ -17,11 +18,15 @@ public class LoginFrame extends JFrame {
     private boolean isJoinButtonHovered = false;
     private boolean isExitButtonHovered = false;
 
+    // ✅ حدود لطول اسم المستخدم
+    private static final int MIN_USERNAME_LENGTH = 2;
+    private static final int MAX_USERNAME_LENGTH = 15;
+
     public LoginFrame() {
         super("Login - 606 ChatApp");
 
         setTitle("606 ChatApp - Login");
-        setSize(400, 450);
+        setSize(400, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -56,8 +61,17 @@ public class LoginFrame extends JFrame {
 
         usernameField = createUsernameField();
         gbc.gridy = 1;
-        gbc.insets = new Insets(10, 40, 10, 40);
+        gbc.insets = new Insets(10, 40, 5, 40);
         panel.add(usernameField, gbc);
+
+        // ✅ Validation Label
+        validationLabel = new JLabel(" ");
+        validationLabel.setForeground(new Color(255, 100, 100));
+        validationLabel.setFont(new Font("Segoe UI", Font.ITALIC, 11));
+        validationLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridy = 2;
+        gbc.insets = new Insets(0, 40, 10, 40);
+        panel.add(validationLabel, gbc);
 
         // ---------------Buttons Panel---------------
 
@@ -70,8 +84,8 @@ public class LoginFrame extends JFrame {
         buttonsPanel.add(joinButton);
         buttonsPanel.add(exitButton);
 
-        gbc.gridy = 2;
-        gbc.insets = new Insets(15, 40, 20, 40);
+        gbc.gridy = 3;
+        gbc.insets = new Insets(10, 40, 20, 40);
         panel.add(buttonsPanel, gbc);
 
         startAnimation();
@@ -79,13 +93,29 @@ public class LoginFrame extends JFrame {
 
     private void joinChat() {
         String username = usernameField.getText().trim();
-        if (username.isEmpty() || username.equals("Enter username") || !username.matches("^[a-zA-Z0-9_]+$")) {
-            JOptionPane.showMessageDialog(this,
-                    "Please enter a valid username (letters, numbers, and underscore only).",
-                    "Invalid Username", JOptionPane.ERROR_MESSAGE);
+
+        // ✅ تحقق محسّن من صحة اسم المستخدم
+        if (username.isEmpty() || username.equals("Enter username")) {
+            showValidationError("Please enter a username");
             return;
         }
 
+        if (username.length() < MIN_USERNAME_LENGTH) {
+            showValidationError("Username too short (min " + MIN_USERNAME_LENGTH + " characters)");
+            return;
+        }
+
+        if (username.length() > MAX_USERNAME_LENGTH) {
+            showValidationError("Username too long (max " + MAX_USERNAME_LENGTH + " characters)");
+            return;
+        }
+
+        if (!username.matches("^[a-zA-Z0-9_]+$")) {
+            showValidationError("Only letters, numbers, and underscore allowed");
+            return;
+        }
+
+        validationLabel.setText(" ");
         setUIEnabled(false);
 
         SwingWorker<Boolean, Void> connector = new SwingWorker<>() {
@@ -125,6 +155,11 @@ public class LoginFrame extends JFrame {
             }
         };
         connector.execute();
+    }
+
+    private void showValidationError(String message) {
+        validationLabel.setText("⚠️ " + message);
+        usernameField.requestFocus();
     }
 
     private void setUIEnabled(boolean enabled) {
@@ -191,6 +226,20 @@ public class LoginFrame extends JFrame {
         field.setCaretColor(Color.WHITE);
         field.setOpaque(false);
         field.setBorder(new RoundedBorder(15));
+
+        // ✅ إضافة DocumentListener لمنع إدخال أكثر من MAX_USERNAME_LENGTH
+        field.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (field.getText().length() >= MAX_USERNAME_LENGTH && e.getKeyChar() != KeyEvent.VK_BACK_SPACE) {
+                    e.consume();
+                    showValidationError("Maximum length is " + MAX_USERNAME_LENGTH + " characters");
+                } else if (validationLabel.getText().contains("Maximum")) {
+                    validationLabel.setText(" ");
+                }
+            }
+        });
+
         field.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {

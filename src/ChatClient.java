@@ -7,6 +7,7 @@ public class ChatClient {
     private PrintWriter out;
     private BufferedReader in;
     private Consumer<String> onMessageReceived;
+    private String actualName;
 
     public ChatClient(String host, int port, Consumer<String> onMessageReceived) {
         this.onMessageReceived = onMessageReceived;
@@ -29,6 +30,12 @@ public class ChatClient {
                     if (message.equals("SUBMIT_NAME")) {
                         continue;
                     }
+                    // Handle name change notification
+                    if (message.startsWith("NAME_CHANGED:")) {
+                        actualName = message.substring(13);
+                        onMessageReceived.accept(message);
+                        continue;
+                    }
                     onMessageReceived.accept(message);
                 }
                 onMessageReceived.accept("SERVER_DISCONNECTED");
@@ -44,7 +51,12 @@ public class ChatClient {
     }
 
     public void sendName(String name) {
+        this.actualName = name;
         out.println(name);
+    }
+
+    public String getActualName() {
+        return actualName;
     }
 
     public void sendExit() {

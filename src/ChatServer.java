@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,7 +9,8 @@ import java.util.Date;
 public class ChatServer {
     private static final int PORT = 5001;
     private ServerSocket serverSocket;
-    private HashSet<ClientHandler> clients = new HashSet<>();
+    private Set<ClientHandler> clients = ConcurrentHashMap.newKeySet();
+    private Set<String> usedNames = ConcurrentHashMap.newKeySet();
     private Consumer<String> logConsumer;
     private Consumer<Set<String>> clientListConsumer;
     private volatile boolean running = true;
@@ -29,9 +31,7 @@ public class ChatServer {
                     try {
                         Socket clientSocket = serverSocket.accept();
                         ClientHandler clientHandler = new ClientHandler(clientSocket);
-                        synchronized (clients) {
-                            clients.add(clientHandler);
-                        }
+                        clients.add(clientHandler);
                         clientHandler.start();
                     } catch (IOException e) {
                         if (running) {
@@ -47,13 +47,12 @@ public class ChatServer {
 
     public void stopServer() throws IOException {
         running = false;
-        synchronized (clients) {
-            for (ClientHandler client : clients) {
-                client.sendMessage("SERVER_STOPPED");
-                client.close();
-            }
-            clients.clear();
+        for (ClientHandler client : clients) {
+            client.sendMessage("SERVER_STOPPED");
+            client.close();
         }
+        clients.clear();
+        usedNames.clear();
         if (serverSocket != null && !serverSocket.isClosed()) {
             serverSocket.close();
         }
@@ -70,8 +69,8 @@ public class ChatServer {
 
     private void updateClientList() {
         Set<String> clientNames = new HashSet<>();
-        synchronized (clients) {
-            for (ClientHandler client : clients) {
+        for (ClientHandler client : clients) {
+            if (client.clientName != null) {
                 clientNames.add(client.clientName);
             }
         }
@@ -96,10 +95,25 @@ public class ChatServer {
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
                 out.println("SUBMIT_NAME");
-                clientName = in.readLine();
-                if (clientName == null || clientName.trim().isEmpty()) {
-                    clientName = "Anonymous";
+                String proposedName = in.readLine();
+
+                // Validate and ensure unique name
+                if (proposedName == null || proposedName.trim().isEmpty()) {
+                    proposedName = "Anonymous";
                 }
+
+                clientName = proposedName;
+                int counter = 1;
+                while (usedNames.contains(clientName)) {
+                    clientName = proposedName + counter;
+                    counter++;
+                }
+                usedNames.add(clientName);
+
+                if (!clientName.equals(proposedName)) {
+                    out.println("NAME_CHANGED:" + clientName);
+                }
+
                 log("New client joined: " + clientName);
                 broadcast(clientName + " has joined the chat.", true);
                 updateClientList();
@@ -112,16 +126,17 @@ public class ChatServer {
                     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
                     String timestamp = sdf.format(new Date());
                     log("Received: " + message);
-                    broadcast(timestamp + " - " + message, message.startsWith(clientName + ": "));
+                    broadcast(timestamp + " - " + message, false);
                 }
             } catch (IOException e) {
                 log("Error with client " + clientName + ": " + e.getMessage());
             } finally {
                 try {
-                    broadcast(clientName + " has left the chat.", true);
-                    synchronized (clients) {
-                        clients.remove(this);
+                    if (clientName != null) {
+                        broadcast(clientName + " has left the chat.", true);
+                        usedNames.remove(clientName);
                     }
+                    clients.remove(this);
                     close();
                     log("Client " + clientName + " left");
                     updateClientList();
@@ -132,11 +147,14 @@ public class ChatServer {
         }
 
         private void broadcast(String message, boolean isSystemMessage) {
-            synchronized (clients) {
-                for (ClientHandler client : clients) {
-                    if (isSystemMessage || client != this) {
-                        client.out.println(message);
-                    }
+            for (ClientHandler client : clients) {
+                // ✅ إصلاح المشكلة: الآن الرسائل تُرسل بشكل صحيح
+                if (isSystemMessage) {
+                    // System messages go to everyone
+                    client.out.println(message);
+                } else {
+                    // Regular messages go to everyone (including sender)
+                    client.out.println(message);
                 }
             }
         }
