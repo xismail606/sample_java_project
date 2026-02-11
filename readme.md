@@ -388,8 +388,6 @@ This project is open source and available for educational purposes.
 <em>Developed with ☕ Java and 💜 Passion</em>
 </p>
 
----
-
 <!-- ===================== FOOTER ===================== -->
 <div align="center">
   <img 
@@ -397,6 +395,7 @@ This project is open source and available for educational purposes.
     width="100%"
   />
 </div>
+
 
 
 
