@@ -390,19 +390,6 @@ This project is open source and available for educational purposes.
 
 ---
 
-<!-- ===================== ACKNOWLEDGMENTS ===================== -->
-<h2 align="center"> 🙏 Acknowledgments </h2>
-
-<p align="center">
-Thanks to all contributors and users of this project.
-</p>
-
-<p align="center">
-Special thanks to the Java and Swing communities for their excellent documentation.
-</p>
-
----
-
 <!-- ===================== FOOTER ===================== -->
 <div align="center">
   <img 
@@ -410,6 +397,7 @@ Special thanks to the Java and Swing communities for their excellent documentati
     width="100%"
   />
 </div>
+
 
 
 
