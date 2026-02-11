@@ -38,11 +38,10 @@ public class ChatServerGUI extends JFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setContentPane(mainPanel);
 
-        // ✅ إصلاح LogArea - إزالة paintComponent المخصص والاعتماد على JTextArea العادي
         logArea = new JTextArea();
         logArea.setEditable(false);
         logArea.setFont(LOG_FONT);
-        logArea.setForeground(new Color(255, 215, 0)); // Gold color
+        logArea.setForeground(new Color(255, 215, 0));
         logArea.setBackground(new Color(30, 30, 50));
         logArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         logArea.setLineWrap(true);
@@ -172,4 +171,5 @@ public class ChatServerGUI extends JFrame {
         }
         SwingUtilities.invokeLater(() -> new ChatServerGUI().setVisible(true));
     }
+
 }
