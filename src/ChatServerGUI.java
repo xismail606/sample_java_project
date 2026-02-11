@@ -171,5 +171,4 @@ public class ChatServerGUI extends JFrame {
         }
         SwingUtilities.invokeLater(() -> new ChatServerGUI().setVisible(true));
     }
-
 }
