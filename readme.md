@@ -385,7 +385,7 @@ This project is open source and available for educational purposes.
 </p>
 
 <p align="center">
-<em>Developed with ☕ Java and 💜 Passion</em>
+<em>Developed with ☕ Java /em>
 </p>
 
 <!-- ===================== FOOTER ===================== -->
@@ -395,6 +395,7 @@ This project is open source and available for educational purposes.
     width="100%"
   />
 </div>
+
 
 
 
